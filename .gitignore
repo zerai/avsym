@@ -1,6 +1,7 @@
 /.idea
 deploy*
 !/.github/workflows/deploy-stage.yaml
+!/.github/workflows/deploy-production.yaml
 /tools/**/vendor
 
 
