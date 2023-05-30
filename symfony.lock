@@ -1,4 +1,7 @@
 {
+    "artgris/maintenance-bundle": {
+        "version": "1.2.1"
+    },
     "symfony/apache-pack": {
         "version": "1.0",
         "recipe": {
