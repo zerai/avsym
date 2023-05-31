@@ -32,6 +32,15 @@ class Article
     {
         return $this->articleId;
     }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
 }
 
 
