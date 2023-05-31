@@ -3,3 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+publishing-controllers:
+    resource:
+        path: ../_publishing/src/Cms/Adapter/HttpWeb/
+        namespace: Publishing\Cms\Adapter\HttpWeb
+    type: attribute
