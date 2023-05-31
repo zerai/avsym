@@ -52,3 +52,8 @@ jobs:
 
             .env.altervista*
             fileToExclude.txt
+
+      - name: Cache-clear
+        uses: wei/curl@master
+        with:
+          args: --insecure -I https://medicaljob.altervista.org/command/cache/clear
