@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SymfonyCliController extends AbstractController
 {
-    #[Route('/command/cache/clear', name: 'app_cli_command_cache_clear')]
+    #[Route('/command/cache/clear', name: 'sys_cli_command_cache_clear')]
     public function command_cache_clear(KernelInterface $kernel): Response
     {
         return $this->do_command($kernel, 'cache:clear');

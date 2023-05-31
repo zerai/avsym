@@ -1,5 +1,10 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    paths:
+        #'%kernel.project_dir%/templates': 'main'
+        '%kernel.project_dir%/_publishing/src/Cms/Adapter/HttpWeb/templates/web-site': 'web-site'
+        '%kernel.project_dir%/_publishing/src/Cms/Adapter/HttpWeb/templates/web-admin': 'web-admin'
+
 
 when@test:
     twig:
