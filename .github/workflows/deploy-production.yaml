@@ -50,6 +50,8 @@ jobs:
             **/docs
             **/tools/**
             **/var/**
+            **/tests/**
+            **/_publishing/tests/**
 
             .env.altervista*
             fileToExclude.txt

@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Tests\Unit;
+
+use PHPUnit\Framework\TestCase;
+
+class TestForCiTest extends TestCase
+{
+    public function testName()
+    {
+        $foo = 'foo';
+        self::assertEquals('foo', $foo);
+    }
+}
