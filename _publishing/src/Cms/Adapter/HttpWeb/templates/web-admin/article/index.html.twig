@@ -1,0 +1,47 @@
+{% extends 'site-layout.html.twig' %}
+
+
+
+{% block main %}
+    <main>
+        <h1>Get started...</h1>
+        <p class="fs-5 col-md-8">Crea un nuovo template e sovrascrivi il blocco main inserendo il tuo codice</p>
+    </main>
+
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">Titolo</th>
+            <th scope="col">Descrizione</th>
+            <th scope="col">Azioni</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for article in pager  %}
+            <tr>
+                <td>#</td>
+                <td>{{ article.articleId }}</td>
+                <td>
+                    {{ article.title }}
+{#                    <a href="{{ path('web_admin_jobpost_show', {'id': jobpost.id.toString}) }}">#}
+{#                        {{ jobpost.title }}#}
+{#                    </a>#}
+                </td>
+                <td>
+{#                    <a href="{{ path('web_admin_jobpost_show', {'id': jobpost.id.toString}) }}">#}
+{#                        {{ jobpost.description }}#}
+{#                    </a>#}
+                </td>
+                <td>
+{#                    <a href="{{ path('web_admin_jobpost_delete', {'id': jobpost.id.toString}) }}">Elimina</a>#}
+{#                    <a href="{{ path('web_admin_jobpost_edit', {'id': jobpost.id.toString}) }}">Modifica</a>#}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ pagerfanta(pager) }}
+
+{% endblock %}

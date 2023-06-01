@@ -54,7 +54,7 @@ jobs:
             .env.altervista*
             fileToExclude.txt
 
-      - name: Cache-clear
+      - name: Cache clear on emote server
         uses: wei/curl@master
         with:
           args: --insecure -I https://stagemedicaljob.altervista.org/command/cache/clear
