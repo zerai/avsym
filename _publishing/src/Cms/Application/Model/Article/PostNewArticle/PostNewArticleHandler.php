@@ -11,9 +11,9 @@ class PostNewArticleHandler
     #[CommandHandler]
     public function postNew(PostNewArticle $command, DocumentStore $documentStore): Article
     {
-        $article = Article::postAsDraft($command->articleId);
+        $article = Article::post($command->articleId, $command->title);
 
-        $documentStore->addDocument(Article::class, $article->getArticleId(), $article);
+        $documentStore->addDocument(Article::class, (string) $article->getArticleId(), $article);
 
         return $article;
     }

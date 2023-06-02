@@ -49,7 +49,7 @@
         <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <form action="{{ path('app_login') }}" method="post">
+    <form action="{{ path('security_login') }}" method="post">
         <h1 class="h3 mb-3 fw-normal">Login</h1>
 
         <div class="form-floating">

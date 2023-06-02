@@ -1,14 +1,52 @@
-{% extends 'site-layout.html.twig' %}
+{% extends 'admin-layout.html.twig' %}
 
+
+{% block title %} {{ parent() }} - Dettaglio Articolo{% endblock %}
 
 
 {% block main %}
-    <main>
-        <h1>Get started...</h1>
-        <p class="fs-5 col-md-8">Crea un nuovo template e sovrascrivi il blocco main inserendo il tuo codice</p>
-    </main>
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <section>
+                <div class="alert alert-{{ label }} text-center" role="alert">
+                    {{ message }}
+                </div>
+            </section>
+        {% endfor %}
+    {% endfor %}
 
-    id: {{ article.articleId }} <br>
-    title: {{ article.title }}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dettaglio articolo</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <a href="{{ path('web_admin_article_index') }}" class="btn btn-sm btn-outline-secondary">
+                    Torna alla lista
+                </a>
+{#                <a href="{{ path('web_admin_article_edit', {'id': article.articleId.toString}) }}" class="btn btn-sm btn-outline-secondary">#}
+{#                    Modifica#}
+{#                </a>#}
+{#                <a href="{{ path('web_admin_article_delete', {'id': article.articleId.toString}) }}" class="btn btn-sm btn-outline-secondary">#}
+{#                    Elimina#}
+{#                </a>#}
+            </div>
+        </div>
+    </div>
 
+    <h2>ID: {{ article.articleId }}</h2>
+
+    <div>
+        <div>ID: {{ article.articleId }}</div>
+        <div>TITOLO: {{ article.title }}</div>
+        <div>DESCRIZIONE: {{ article.content }}</div>
+        <div>PUBBLICATO: {% if article.publicationStart is not null%}
+            {{ article.publicationStart|date('Y-m-d') }}
+            {% endif %}
+        </div>
+        <div>SCADE: {% if article.publicationEnd is not null%}
+                {{ article.publicationEnd|date('Y-m-d') }}
+            {% endif %}
+        </div>
+    </div>
+</main>
 {% endblock %}

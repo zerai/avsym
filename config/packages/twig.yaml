@@ -5,6 +5,7 @@ twig:
         '%kernel.project_dir%/_publishing/src/Cms/Adapter/HttpWeb/templates/web-site': 'web-site'
         '%kernel.project_dir%/_publishing/src/Cms/Adapter/HttpWeb/templates/web-admin': 'web-admin'
 
+    form_themes: ['bootstrap_5_layout.html.twig']
 
 when@test:
     twig:

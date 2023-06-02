@@ -6,5 +6,9 @@ use Ramsey\Uuid\UuidInterface;
 
 class PostNewArticle
 {
-    public UuidInterface $articleId;
+    public function __construct(
+        public UuidInterface $articleId,
+        public string $title
+    ) {
+    }
 }

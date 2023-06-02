@@ -17,6 +17,23 @@ class Article
 
     private string $title;
 
+    private ?string $content = null;
+
+    private ?\DateTimeImmutable $publicationStart = null;
+
+    private ?\DateTimeImmutable $publicationEnd = null;
+
+    public static function post(UuidInterface $articleId, string $title): self
+    {
+        $article = new self();
+        $article->articleId = $articleId;
+        $article->title = $title;
+
+        //$article->recordThat(new SessionWasStarted($article->sessionId));
+
+        return $article;
+    }
+
     public static function postAsDraft(UuidInterface $articleId): self
     {
         $article = new self();
@@ -36,5 +53,20 @@ class Article
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function getPublicationStart(): ?\DateTimeImmutable
+    {
+        return $this->publicationStart;
+    }
+
+    public function getPublicationEnd(): ?\DateTimeImmutable
+    {
+        return $this->publicationEnd;
     }
 }

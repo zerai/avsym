@@ -17,6 +17,18 @@ class ArticleTest extends TestCase
         self::assertEquals('foo', $foo);
     }
 
+    public function testPostNewArticleHasDefaultValues(): void
+    {
+        $id = Uuid::uuid4();
+        $article = Article::post($id, 'a title');
+
+        self::assertEquals($id, $article->getArticleId());
+        self::assertEquals('a title', $article->getTitle());
+        self::assertNull($article->getContent());
+        self::assertNull($article->getPublicationStart());
+        self::assertNull($article->getPublicationEnd());
+    }
+
     public function testPostAsDraftHasDefaultTitle(): void
     {
         $id = Uuid::uuid4();
