@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Publishing\Cms\Application\Model\Article;
 
@@ -33,15 +33,8 @@ class Article
         return $this->articleId;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
-
 }
-
-
-

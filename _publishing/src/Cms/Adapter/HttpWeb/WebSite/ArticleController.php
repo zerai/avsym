@@ -42,16 +42,15 @@ class ArticleController extends AbstractController
         $pager->setMaxPerPage(2);
         $pager->setCurrentPage((int) $request->query->get('page', '1'));
 
-
         return $this->render('@web-site/article/index.html.twig', [
-            'pager' => $pager
+            'pager' => $pager,
         ]);
     }
 
     #[Route('/article/{id}/show', name: 'app_article_show')]
     public function show(Request $request, CommandBus $commandBus, DocumentStore $documentStore): Response
     {
-        $articleId= $request->get('id');
+        $articleId = $request->get('id');
 
         $article = $documentStore->getDocument(Article::class, $articleId);
 

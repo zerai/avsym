@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Publishing\Cms\Application\Model\Article\PostNewArticle;
 
@@ -11,7 +11,7 @@ class PostNewArticleHandler
     #[CommandHandler]
     public function postNew(PostNewArticle $command, DocumentStore $documentStore): Article
     {
-        $article =  Article::postAsDraft($command->articleId);
+        $article = Article::postAsDraft($command->articleId);
 
         $documentStore->addDocument(Article::class, $article->getArticleId(), $article);
 

@@ -1,9 +1,16 @@
 name: Deployment on Stage
 
 on:
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    inputs:
+      triggering-sha:
+        required: true
+        type: string
+
 
 jobs:
   stage-deployment:
@@ -11,8 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: av-stage
     steps:
-      - name: 🚚 Get latest code
+#      - name: 🚚 Get latest code
+#        uses: actions/checkout@v3
+      - name: Checkout on SHA-${{ inputs.triggering-sha }}
         uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.triggering-sha }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@2.22.0
@@ -54,9 +65,8 @@ jobs:
             **/_publishing/tests/**
 
             .env.altervista*
-            fileToExclude.txt
 
-      - name: Cache clear on emote server
+      - name: Cache clear on remote server
         uses: wei/curl@master
         with:
           args: --insecure -I https://stagemedicaljob.altervista.org/command/cache/clear

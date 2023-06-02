@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "19a255f5deb2a6993ed46aa40e45c55c",
+    "content-hash": "7b7b8a9551f203f6c9a9955efb9f7ddb",
     "packages": [
         {
             "name": "artgris/maintenance-bundle",

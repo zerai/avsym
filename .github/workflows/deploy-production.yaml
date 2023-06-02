@@ -2,8 +2,10 @@ name: Deployment on Production
 
 on:
   push:
-    branches:
-      - main
+    #branches:
+      #- main
+    tags: # Sequence of patterns matched against refs/tags
+      - 0.1.*
 
 jobs:
   stage-deployment:
@@ -54,9 +56,8 @@ jobs:
             **/_publishing/tests/**
 
             .env.altervista*
-            fileToExclude.txt
 
-      - name: Cache clear on emote server
+      - name: Cache clear on remote server
         uses: wei/curl@master
         with:
           args: --insecure -I https://medicaljob.altervista.org/command/cache/clear

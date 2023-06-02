@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Publishing\Cms\Infrastructure\ItOps;
 
@@ -19,5 +19,4 @@ class UuidConverter
     {
         return $uuid->toString();
     }
-
 }

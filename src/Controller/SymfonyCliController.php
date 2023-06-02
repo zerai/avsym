@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -20,7 +20,6 @@ class SymfonyCliController extends AbstractController
         return $this->do_command($kernel, 'cache:clear');
     }
 
-
     private function do_command($kernel, $command): Response
     {
         $env = $kernel->getEnvironment();
@@ -28,10 +27,10 @@ class SymfonyCliController extends AbstractController
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'command' => $command,
-            '--env' => $env
-        ));
+            '--env' => $env,
+        ]);
 
         $output = new BufferedOutput();
         $application->run($input, $output);

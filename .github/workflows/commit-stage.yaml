@@ -1,0 +1,212 @@
+name: Commit stage
+
+on:
+  workflow_call:
+    # Map the workflow outputs to job outputs
+    inputs:
+      triggering-sha:
+        required: true
+        type: string
+
+env:
+  # COVERAGE SETTING VARS
+  UNIT_TEST_CLOVER_FILENAME: 'coverage-unit-test-clover.xml'
+  UNIT_TEST_JUNIT_FILENAME: 'coverage-unit-test-junit.xml'
+  # ARTIFACTS SETTING VARS
+  ARTIFATC_NAME_FOR_UNIT_TESTS_COVERAGE: 'Unit-test-coverage-reports-on-SHA'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  unit-test:
+    name: Unit test
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        php:
+          - '8.2'
+        generate-coverage-report: [true]
+#        include:
+#          - php: '8.3'
+#            generate-coverage-report: false
+      fail-fast: true
+    steps:
+      - name: Checkout on SHA-${{ inputs.triggering-sha }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.triggering-sha }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: ${{ matrix.php }}
+          ini-values: memory_limit=-1
+          coverage: xdebug
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-scripts --ansi
+
+      - name: Run unit tests
+        if: ${{ !matrix.generate-coverage-report }}
+        run: |
+          bin/phpunit --testsuite=unit --testdox --no-interaction --colors=always
+
+      - name: Run unit tests with coverage
+        if: ${{ matrix.generate-coverage-report }}
+        run: |
+          bin/phpunit --testsuite=unit --testdox --no-interaction --colors=always \
+          --coverage-clover $UNIT_TEST_CLOVER_FILENAME \
+          --log-junit $UNIT_TEST_JUNIT_FILENAME
+
+      - name: Generate Coverage artifact name
+        if: ${{ matrix.generate-coverage-report }}
+        id: generate-coverage-artifact-name
+        run: echo "name=$ARTIFATC_NAME_FOR_UNIT_TESTS_COVERAGE-$GITHUB_SHA" >> $GITHUB_OUTPUT
+
+      - name: Save coverage reports
+        if: ${{ matrix.generate-coverage-report }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.generate-coverage-artifact-name.outputs.name }}
+          path: |
+            ${{ env.UNIT_TEST_CLOVER_FILENAME }}
+            ${{ env.UNIT_TEST_JUNIT_FILENAME }}
+
+
+  coding-standard:
+    name: Coding standard
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        php:
+          - '8.2'
+      fail-fast: true
+    steps:
+      - name: Checkout on SHA-${{ inputs.triggering-sha }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.triggering-sha }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: ${{ matrix.php }}
+          ini-values: memory_limit=-1
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-scripts --ansi
+          composer bin ecs install --prefer-dist --no-progress --no-scripts --ansi
+
+      - name: Run ecs
+        run: composer cs
+
+
+#  static-analysis:
+#    name: Static Analysis
+#    runs-on: ubuntu-22.04
+#    timeout-minutes: 5
+#    strategy:
+#      matrix:
+#        php:
+#          - '7.4'
+#      fail-fast: true
+#    steps:
+#      - name: Checkout on SHA-${{ inputs.triggering-sha }}
+#        uses: actions/checkout@v3
+#        with:
+#          ref: ${{ inputs.triggering-sha }}
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@2.22.0
+#        with:
+#          php-version: ${{ matrix.php }}
+#          ini-values: memory_limit=-1
+#          coverage: none
+#
+#      - name: Install Composer dependencies
+#        run: |
+#          composer install --prefer-dist --no-progress --no-scripts --ansi
+#          composer bin phpstan install --prefer-dist --no-progress --no-scripts --ansi
+#
+#      - name: Prepare symfony container
+#        run: bin/console debug:container --quiet
+#
+#      - name: Run phpstan
+#        run: composer sa
+
+
+  checks-composer:
+    name: Validate Composer
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        php:
+          - '8.2'
+      fail-fast: true
+    steps:
+      - name: Checkout on SHA-${{ inputs.triggering-sha }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.triggering-sha }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.22.0
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          ini-values: memory_limit=-1
+          coverage: none
+          tools: composer, composer-normalize:2.16.0
+
+      - name: Install Composer dependencies
+        run: |
+          composer install --prefer-dist --no-progress --no-scripts --ansi
+
+      - name: Run composer validate
+        run: |
+          composer validate --strict --ansi
+
+      - name: Run composer normalize
+        run: |
+          composer-normalize --dry-run --ansi
+
+
+#  rector:
+#    name: rector maintenance
+#    runs-on: ubuntu-22.04
+#    timeout-minutes: 5
+#    strategy:
+#      matrix:
+#        php:
+#          - '7.4'
+#      fail-fast: true
+#    steps:
+#      - name: Checkout on SHA-${{ inputs.triggering-sha }}
+#        uses: actions/checkout@v3
+#        with:
+#          ref: ${{ inputs.triggering-sha }}
+#
+#      - name: Setup PHP
+#        uses: shivammathur/setup-php@2.22.0
+#        with:
+#          php-version: ${{ matrix.php }}
+#          ini-values: memory_limit=-1
+#          coverage: none
+#
+#      - name: Install Composer dependencies
+#        run: |
+#          composer install --prefer-dist --no-progress --no-scripts --ansi
+#          composer bin rector install --prefer-dist --no-progress --no-scripts --ansi
+#
+#      - name: Run rector
+#        run: |
+#          bin/console lint:container
+#          composer rc
