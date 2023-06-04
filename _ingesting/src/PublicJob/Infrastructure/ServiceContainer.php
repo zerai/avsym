@@ -1,0 +1,97 @@
+<?php declare(strict_types=1);
+
+namespace Ingesting\PublicJob\Infrastructure;
+
+use FeedIo\Adapter\Http\Client;
+use FeedIo\Factory;
+use FeedIo\FeedIo;
+use Ingesting\PublicJob\Adapter\Rss\FeedIoRssReader;
+use Ingesting\PublicJob\Application\Model\Iso\RssReader;
+use Ingesting\PublicJob\Application\Model\JobRepository;
+use Ingesting\PublicJob\Application\Model\Service\JobUniqueService;
+use Ingesting\PublicJob\Application\Model\Service\UniqueJobLinkService;
+use Ingesting\PublicJob\Application\Model\Service\UniqueLink;
+use Ingesting\PublicJob\Application\PublicJobContextInterface;
+use Ingesting\PublicJob\Application\PublicJobModule;
+use Ingesting\PublicJob\Application\Usecase\JobRssDataSourceChecker;
+use Ingesting\PublicJob\Application\Usecase\ReadJobRssUsecase;
+use Symfony\Component\HttpClient\HttplugClient;
+
+abstract class ServiceContainer
+{
+    protected ?PublicJobContextInterface $module = null;
+
+    protected ?JobRepository $jobRepository = null;
+
+    protected ?JobUniqueService $jobUniqueService = null;
+
+    protected ?UniqueJobLinkService $uniqueJobLinkService = null;
+
+    protected ?JobRssDataSourceChecker $readJobRssUsecase = null;
+
+    protected ?RssReader $jobRssReader = null;
+
+    public function module(): PublicJobContextInterface
+    {
+        if ($this->module === null) {
+            $this->module = new PublicJobModule(
+                $this->readJobRssUsecase()
+            );
+        }
+        return $this->module;
+    }
+
+    protected function jobRssReader(): RssReader
+    {
+        if ($this->jobRssReader === null) {
+            $client = new Client(new HttplugClient());
+            
+            $feedIo = new FeedIo($client);
+            dd($feedIo->read('https://www.gazzettaufficiale.it/rss/S4'));
+            $this->jobRssReader = new FeedIoRssReader($feedIo);
+        }
+
+        return $this->jobRssReader;
+    }
+
+    public function jobUniqueService(): JobUniqueService
+    {
+        if ($this->jobUniqueService === null) {
+            $this->jobUniqueService = new JobUniqueService($this->jobRepository());
+        }
+
+        return $this->jobUniqueService;
+    }
+
+    protected function uniqueJobLinkService(): UniqueLink
+    {
+        if ($this->uniqueJobLinkService === null) {
+            $this->uniqueJobLinkService = new UniqueJobLinkService($this->jobRepository());
+        }
+
+        return $this->uniqueJobLinkService;
+    }
+
+    protected function jobRepository(): JobRepository
+    {
+        if ($this->jobRepository === null) {
+            throw new \RuntimeException('JobRepository not yet implemented');
+        }
+
+        return $this->jobRepository;
+    }
+
+    protected function readJobRssUsecase(): JobRssDataSourceChecker
+    {
+        if ($this->readJobRssUsecase === null) {
+            $this->readJobRssUsecase = new ReadJobRssUsecase(
+                $this->jobRssReader(),
+                $this->jobUniqueService(),
+                $this->uniqueJobLinkService(),
+                $this->jobRepository()
+            );
+        }
+
+        return $this->readJobRssUsecase;
+    }
+}

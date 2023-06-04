@@ -6,6 +6,9 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         server_version: '8.0'
         charset: utf8mb4
+        types:
+            job_id: Ingesting\PublicJob\Adapter\Persistence\Doctrine\Config\JobIdType
+            #errata_id: Ingesting\Errata\Adapter\Persistence\Doctrine\Config\ErrataIdType
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
@@ -17,6 +20,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+            PubicJob:
+                is_bundle: false
+                type: yml
+                dir: '%kernel.project_dir%/_ingesting/src/PublicJob/Adapter/Persistence/Doctrine/Config/Yaml'
+                prefix: 'Ingesting\PublicJob\Application\Model'
+                alias: PublicJob
 
 when@test:
     doctrine:
