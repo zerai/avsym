@@ -20,6 +20,12 @@ class SymfonyCliController extends AbstractController
         return $this->do_command($kernel, 'cache:clear');
     }
 
+    #[Route('/command/db/migrate', name: 'sys_cli_command_migrations_run')]
+    public function command_migrations_run(KernelInterface $kernel): Response
+    {
+        return $this->do_commandWithOptions($kernel, 'doctrine:migrations:migrate');
+    }
+
     private function do_command($kernel, $command): Response
     {
         $env = $kernel->getEnvironment();
@@ -30,6 +36,28 @@ class SymfonyCliController extends AbstractController
         $input = new ArrayInput([
             'command' => $command,
             '--env' => $env,
+        ]);
+
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        $content = $output->fetch();
+
+        return new Response($content);
+    }
+
+    private function do_commandWithOptions($kernel, $command, array $options = []): Response
+    {
+        $env = $kernel->getEnvironment();
+
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => $command,
+            '--env' => $env,
+            '--no-interaction' => true,
+            '--allow-no-migration' => true,
         ]);
 
         $output = new BufferedOutput();
