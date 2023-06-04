@@ -23,17 +23,17 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Publishing\:
-        resource: '../_publishing/src/'
-        exclude:
-            - '../_publishing/src/Cms/Adapter/HttpWeb/'
+#    Publishing\:
+#        resource: '../_publishing/src/'
+#        exclude:
+#            - '../_publishing/src/Cms/Adapter/HttpWeb/'
+#
+#    Publishing\Cms\Adapter\HttpWeb\:
+#        resource: '../_publishing/src/Cms/Adapter/HttpWeb/'
+#        tags: [ 'controller.service_arguments' ]
 
-    Publishing\Cms\Adapter\HttpWeb\:
-        resource: '../_publishing/src/Cms/Adapter/HttpWeb/'
-        tags: [ 'controller.service_arguments' ]
 
-
-    Enqueue\Dbal\DbalConnectionFactory:
-        class: Enqueue\Dbal\DbalConnectionFactory
-        arguments: ['%env(resolve:DATABASE_URL)%']
+#    Enqueue\Dbal\DbalConnectionFactory:
+#        class: Enqueue\Dbal\DbalConnectionFactory
+#        arguments: ['%env(resolve:DATABASE_URL)%']
 

@@ -25,7 +25,9 @@ class CmsEcotoneConfiguration
     #[ServiceContext]
     public function documentStoreRepository()
     {
-        return DbalConfiguration::createWithDefaults()
-            ->withDocumentStore(enableDocumentStoreAggregateRepository: true);
+        //        return DbalConfiguration::createWithDefaults()
+        //            ->withDocumentStore(enableDocumentStoreAggregateRepository: true);
+
+        return [];
     }
 }
